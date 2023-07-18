@@ -6,7 +6,7 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 18:14:50 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/06/12 22:50:28 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/18 12:24:40 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,8 @@ int	main(void)
 		printf("Thread %d has started\n", i++);
 	}
 	i = 0;
-	while (i < 8)
 	{
-		if (pthread_join(th[i], (void **) &mails) != 0)
+		if (pthread_join(th[i], (void **) &mails ) != 0)
 			return (2);
 		printf("Thread %d has finished execution\n", i++);
 	}
