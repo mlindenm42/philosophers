@@ -6,7 +6,7 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 04:18:30 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/07/28 20:01:20 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/29 00:40:13 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,14 @@ static void	init_ps(void)
 		get_d()->ps[i]->left_fork = get_d()->forks[i];
 		get_d()->ps[i]->right_fork = get_d()->forks[(i + 1)
 		% get_d()->nb_of_ps];
+		get_d()->ps[i]->last_meal_time = 0;
 		get_d()->ps[i]->meals_eaten = 0;
-		gettimeofday(&get_d()->ps[i]->last_meal_time, NULL);
 		if (pthread_create(&get_d()->ps[i]->thread, NULL,
 				&p_thread, get_d()->ps[i]) != 0)
 			error("Failed to create thread for p %d\n");
 		i++;
 	}
+	// get_d()->ready = 1;
 }
 
 void	init(int argc, char *argv[])
@@ -77,12 +78,9 @@ void	init(int argc, char *argv[])
 		get_d()->have_to_eat = ft_atoi(argv[5]);
 	else
 		get_d()->have_to_eat = -1;
-	// if (get_d()->nb_of_ps > 200 || get_d()->nb_of_ps <= 0
-	// 	|| get_d()->time_to_die < 60 || get_d()->time_to_eat < 60
-	// 	|| get_d()->time_to_sleep < 60)
-	// 	error("Invalid arguments!");
 	get_d()->death = 0;
 	get_d()->finished = 0;
+	get_d()->ready = 0;
 	if (pthread_mutex_init(&(get_d()->m_dead), NULL) != 0)
 		error("Failed to initialize mutex for eat %d\n");
 	if (pthread_mutex_init(&(get_d()->m_last_meal), NULL) != 0)

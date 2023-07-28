@@ -6,7 +6,7 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 03:21:26 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/07/28 19:53:05 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/29 00:33:20 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,10 @@ void	check_arg(int argc, char *argv[])
 		}
 		i++;
 	}
+	if (ft_atoi(argv[1]) > 200 || ft_atoi(argv[1]) <= 0
+		|| ft_atoi(argv[2]) < 60 || ft_atoi(argv[3]) < 60
+		|| ft_atoi(argv[4]) < 60)
+		error("Invalid arguments!");
 }
 
 void	check_dead_finished(void)
@@ -43,21 +47,29 @@ void	check_dead_finished(void)
 		i = 0;
 		while (i < get_d()->nb_of_ps)
 		{
-			if (get_d()->finished == get_d()->nb_of_ps && get_d()->have_to_eat != -1)
+			usleep(99);
+			if (get_d()->have_to_eat != -1 && get_d()->finished == get_d()->nb_of_ps)
 				return ;
-			if (((long)get_d()->ps[i]->last_meal_time.tv_sec * 1000)
-				+ ((long)get_d()->ps[i]->last_meal_time.tv_usec / 1000)
-				+ get_d()->time_to_die < (long)get_time())
+			pthread_mutex_lock(&get_d()->m_last_meal);
+			// printf("lastmeal: %ld\n", get_d()->ps[i]->last_meal_time);
+			// printf("timetodi: %ld\n", (long)get_d()->time_to_die);
+			// printf("get_time: %ld\n", (long)get_time());
+			// printf("startime: %ld\n", get_d()->start_time);
+			// printf("first  check: %ld\n", get_d()->ps[i]->last_meal_time + get_d()->time_to_die);
+			// printf("second check: %ld\n", (long)get_time() - get_d()->start_time);
+			if (get_d()->ps[i]->last_meal_time + get_d()->time_to_die < (long)get_time() - get_d()->start_time)
 			{
 				pthread_mutex_lock(&get_d()->m_dead);
 				get_d()->death = 1;
 				pthread_mutex_unlock(&get_d()->m_dead);
 				pthread_mutex_lock(&get_d()->m_print);
-				printf("%ld ms %d died\n", get_time() - get_d()->start_time,
+				// printf("lastmeal: %ld", )
+				printf("%ld %d died\n", get_time() - get_d()->start_time,
 					get_d()->ps[i]->number);
 				pthread_mutex_unlock(&get_d()->m_print);
 				return ;
 			}
+			pthread_mutex_unlock(&get_d()->m_last_meal);
 			i++;
 		}
 	}

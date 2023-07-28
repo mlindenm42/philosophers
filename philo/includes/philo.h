@@ -6,7 +6,7 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 18:15:16 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/07/28 20:23:09 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/28 23:08:44 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef struct s_p {
 	int				number;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
-	struct timeval	last_meal_time;
+	long			last_meal_time;
 	int				meals_eaten;
 	pthread_t		thread;
 }	t_p;
@@ -44,11 +44,14 @@ typedef struct s_data {
 	long			start_time;
 	int				death;
 	int				finished;
+	int				ready;
 	pthread_mutex_t	m_dead;
 	pthread_mutex_t	m_finished;
 	pthread_mutex_t	m_last_meal;
 	pthread_mutex_t	m_print;
 }	t_data;
+
+void	ft_usleep(long time);
 
 // check.c
 void	check_arg(int argc, char *argv[]);

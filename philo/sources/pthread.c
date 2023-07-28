@@ -6,7 +6,7 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 20:14:42 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/07/28 20:20:29 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/29 00:40:44 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,12 @@ void	*p_thread(void *arg)
 	t_p	*p;
 
 	p = (t_p *)arg;
+	if (p->number % 2 == 0)
+		ft_usleep(get_d()->time_to_eat / 5);
 	while (1)
 	{
 		if (dead())
-			break ;
+			return (NULL);
 		eat(p, *get_d());
 		if (get_d()->have_to_eat > 0)
 		{
@@ -44,7 +46,7 @@ void	*p_thread(void *arg)
 				pthread_mutex_lock(&get_d()->m_finished);
 				get_d()->finished++;
 				pthread_mutex_unlock(&get_d()->m_finished);
-				break ;
+				return (NULL);
 			}
 		}
 		do_sleep(p, *get_d());
@@ -52,3 +54,27 @@ void	*p_thread(void *arg)
 	}
 	return (NULL);
 }
+
+// void	*p_thread(void *arg)
+// {
+// 	t_p	*p;
+
+// 	p = (t_p *)arg;
+// 	while (!dead())
+// 	{
+// 		while (get_d()->ready == 1)
+// 		{
+// 			eat(p, *get_d());
+// 			if (get_d()->have_to_eat > 0 && p->meals_eaten >= get_d()->have_to_eat)
+// 			{
+// 				pthread_mutex_lock(&get_d()->m_finished);
+// 				get_d()->finished++;
+// 				pthread_mutex_unlock(&get_d()->m_finished);
+// 				return (NULL);
+// 			}
+// 			do_sleep(p, *get_d());
+// 			think(p, *get_d());
+// 		}
+// 	}
+// 	return (NULL);
+// }
