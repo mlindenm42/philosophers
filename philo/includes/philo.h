@@ -6,7 +6,7 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 18:15:16 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/07/20 21:55:15 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/28 06:07:54 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,15 @@
 # include <stdlib.h>
 # include <sys/time.h>
 
+typedef struct s_fork {
+	int				number;
+	pthread_mutex_t	*m_fork;
+}	t_fork;
+
 typedef struct s_p {
 	int				number;
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	*right_fork;
+	t_fork			*left_fork;
+	t_fork			*right_fork;
 	struct timeval	last_meal_time;
 	int				meals_eaten;
 	pthread_t		thread;
@@ -30,18 +35,36 @@ typedef struct s_p {
 
 typedef struct s_data {
 	t_p				**ps;
-	pthread_mutex_t	**forks;
-	int				number_of_ps;
+	t_fork			**forks;
+	int				nb_of_ps;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
-	int				number_of_times_each_p_must_eat;
-	int				total_meals_eaten;
+	int				have_to_eat;
+	long			start_time;
+	pthread_mutex_t	m_dead;
+	pthread_mutex_t	m_eat;
+	pthread_mutex_t	m_print;
 }	t_data;
 
-int		get_timestamp_ms(void);
+t_data	*get_d(void);
+long	get_time(void);
+void	*p_thread(void *arg);
+
+// check.c
+void	check_arg(int argc, char *argv[]);
 
 // error.c
 void	error(char *reason);
+void	error_data(char *reason);
+// void	free_all();
+
+// init.c
+void	init(int argc, char *argv[]);
+
+// utils.c
+int		ft_atoi(const char *str);
+int		ft_isdigit(int c);
+size_t	ft_strlen(const char *s);
 
 #endif
