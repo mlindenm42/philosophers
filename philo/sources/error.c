@@ -6,14 +6,82 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 03:38:46 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/07/28 05:43:54 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/28 19:13:41 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
+static void	free_ps(void)
+{
+	int	i;
+
+	i = 0;
+	if (get_d()->ps == NULL)
+		return ;
+	while (*(get_d()->ps + i) != NULL && i < get_d()->nb_of_ps)
+	{
+		free(*(get_d()->ps + i));
+		*(get_d()->ps + i) = NULL;
+		i++;
+	}
+	if (get_d()->ps != NULL)
+	{
+		free(get_d()->ps);
+		get_d()->ps = NULL;
+	}
+}
+
+static void	free_forks(void)
+{
+	int	i;
+
+	if (get_d()->forks == NULL)
+		return ;
+	i = 0;
+	while (*(get_d()->forks + i) != NULL && i < get_d()->nb_of_ps)
+	{
+		if (get_d()->forks[i]->m_fork != NULL)
+			free(get_d()->forks[i]->m_fork);
+		get_d()->forks[i]->m_fork = NULL;
+		i++;
+	}
+	i = 0;
+	while (*(get_d()->forks + i) != NULL && i < get_d()->nb_of_ps)
+	{
+		if (*(get_d()->forks + i) != NULL)
+			free(*(get_d()->forks + i));
+		*(get_d()->forks + i) = NULL;
+		i++;
+	}
+	if (get_d()->forks != NULL)
+	{
+		free(get_d()->forks);
+		get_d()->forks = NULL;
+	}
+}
+
+void	free_all(void)
+{
+	int	i;
+
+	i = 0;
+	while (i < get_d()->nb_of_ps && i < get_d()->nb_of_ps)
+		pthread_join(get_d()->ps[i++]->thread, NULL);
+	i = 0;
+	while (i < get_d()->nb_of_ps)
+		pthread_mutex_destroy(get_d()->forks[i++]->m_fork);
+	pthread_mutex_destroy(&get_d()->m_dead);
+	pthread_mutex_destroy(&get_d()->m_last_meal);
+	pthread_mutex_destroy(&get_d()->m_finished);
+	pthread_mutex_destroy(&get_d()->m_print);
+	free_ps();
+	free_forks();
+}
+
 void	error(char *reason)
 {
+	free_all();
 	pthread_mutex_lock(&get_d()->m_print);
 	write(2, "Error\n", 6);
 	write(2, reason, ft_strlen(reason));
@@ -23,37 +91,8 @@ void	error(char *reason)
 
 void	error_data(char *reason)
 {
-	// free_all(p);
+	free_all();
 	write(2, "Error\n", 6);
 	write(2, reason, ft_strlen(reason));
 	exit(EXIT_FAILURE);
 }
-
-// void	free_all()
-// {
-// 	free_ptrptr(p);
-// 	while (p->a->start != NULL)
-// 		free(remove_node_from_stack_top(p->a));
-// 	while (p->b->start != NULL)
-// 		free(remove_node_from_stack_top(p->b));
-// 	if (p->buffer != NULL)
-// 	{
-// 		free(p->buffer);
-// 		p->buffer = NULL;
-// 	}
-// 	if (p->a != NULL)
-// 	{
-// 		free(p->a);
-// 		p->a = NULL;
-// 	}
-// 	if (p->b != NULL)
-// 	{
-// 		free(p->b);
-// 		p->b = NULL;
-// 	}
-// 	if (p != NULL)
-// 	{
-// 		free(p);
-// 		p = NULL;
-// 	}
-// }
