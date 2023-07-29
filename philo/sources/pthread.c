@@ -6,7 +6,7 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 20:14:42 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/07/29 00:40:44 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/29 02:11:20 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,9 @@ void	*p_thread(void *arg)
 	p = (t_p *)arg;
 	if (p->number % 2 == 0)
 		ft_usleep(get_d()->time_to_eat / 5);
-	while (1)
+	while (!dead())
 	{
-		if (dead())
-			return (NULL);
-		eat(p, *get_d());
+		eat(p);
 		if (get_d()->have_to_eat > 0)
 		{
 			if (p->meals_eaten >= get_d()->have_to_eat)
@@ -49,8 +47,8 @@ void	*p_thread(void *arg)
 				return (NULL);
 			}
 		}
-		do_sleep(p, *get_d());
-		think(p, *get_d());
+		do_sleep(p);
+		think(p);
 	}
 	return (NULL);
 }

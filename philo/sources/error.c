@@ -6,7 +6,7 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 03:38:46 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/07/28 19:13:41 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/29 02:34:17 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ static void	free_ps(void)
 	i = 0;
 	if (get_d()->ps == NULL)
 		return ;
-	while (*(get_d()->ps + i) != NULL && i < get_d()->nb_of_ps)
+	while (i < get_d()->nb_of_ps)
 	{
-		free(*(get_d()->ps + i));
-		*(get_d()->ps + i) = NULL;
+		free(get_d()->ps[i]);
+		// *(get_d()->ps + i) = NULL;
 		i++;
 	}
 	if (get_d()->ps != NULL)
@@ -39,26 +39,17 @@ static void	free_forks(void)
 	if (get_d()->forks == NULL)
 		return ;
 	i = 0;
-	while (*(get_d()->forks + i) != NULL && i < get_d()->nb_of_ps)
+	while (i < get_d()->nb_of_ps)
 	{
 		if (get_d()->forks[i]->m_fork != NULL)
+		{
+			pthread_mutex_destroy(get_d()->forks[i]->m_fork);
 			free(get_d()->forks[i]->m_fork);
-		get_d()->forks[i]->m_fork = NULL;
+		}
+		free(get_d()->forks[i]);
 		i++;
 	}
-	i = 0;
-	while (*(get_d()->forks + i) != NULL && i < get_d()->nb_of_ps)
-	{
-		if (*(get_d()->forks + i) != NULL)
-			free(*(get_d()->forks + i));
-		*(get_d()->forks + i) = NULL;
-		i++;
-	}
-	if (get_d()->forks != NULL)
-	{
-		free(get_d()->forks);
-		get_d()->forks = NULL;
-	}
+	free(get_d()->forks);
 }
 
 void	free_all(void)

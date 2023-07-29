@@ -6,7 +6,7 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 20:21:19 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/07/29 00:38:24 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/29 02:17:20 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,44 +24,74 @@ int	dead(void)
 	return (0);
 }
 
-void	think(t_p *p, t_data d)
+int	print_helper(char *msg, long int arg1, int arg2)
 {
-	pthread_mutex_lock(&d.m_print);
-	printf("%ld %d is thinking\n", get_time() - d.start_time, p->number);
+	if (!dead())
+	{
+		pthread_mutex_lock(&get_d()->m_print);
+		printf(msg, arg1, arg2);
+		pthread_mutex_unlock(&get_d()->m_print);
+		return (0);
+	}
+	else
+		return (1);
+}
+
+void	think(t_p *p)
+{
+	print_helper("%ld %d is thinking\n", get_time() - get_d()->start_time, p->number);
 	// ft_usleep(d.time_to_eat / 5);
-	pthread_mutex_unlock(&d.m_print);
 }
 
-void	do_sleep(t_p *p, t_data d)
+void	do_sleep(t_p *p)
 {
-	pthread_mutex_lock(&d.m_print);
-	printf("%ld %d is sleeping\n", get_time() - d.start_time, p->number);
-	pthread_mutex_unlock(&d.m_print);
+	print_helper("%ld %d is sleeping\n", get_time() - get_d()->start_time, p->number);
 	// usleep(d.time_to_sleep * 1000);
-	ft_usleep(d.time_to_sleep);
+	ft_usleep(get_d()->time_to_sleep);
 }
 
-void	eat(t_p *p, t_data d)
+void	eat(t_p *p)
 {
 	pthread_mutex_lock(p->left_fork->m_fork);
-	pthread_mutex_lock(&d.m_print);
-	printf("%ld %d has taken a fork\n", get_time() - d.start_time, p->number);
-	pthread_mutex_unlock(&d.m_print);
-	pthread_mutex_lock(p->right_fork->m_fork);
-	pthread_mutex_lock(&d.m_print);
-	printf("%ld %d has taken a fork\n", get_time() - d.start_time, p->number);
-	pthread_mutex_unlock(&d.m_print);
+	// pthread_mutex_lock(&get_d()->m_print);
+	// printf("left fork: %p with number: %d\n", p->left_fork->m_fork, p->left_fork->number);
+	// pthread_mutex_unlock(&get_d()->m_print);
 
-	pthread_mutex_lock(&d.m_last_meal);
-	p->last_meal_time = (long)get_time();
+	if (print_helper("%ld %d has taken a fork\n", get_time() - get_d()->start_time, p->number))
+	{
+		pthread_mutex_unlock(p->left_fork->m_fork);
+		return ;
+	}
+
+	pthread_mutex_lock(p->right_fork->m_fork);
+	// pthread_mutex_lock(&get_d()->m_print);
+	// printf("right fork: %p with number: %d\n", p->right_fork->m_fork, p->right_fork->number);
+	// pthread_mutex_unlock(&get_d()->m_print);
+
+	if (print_helper("%ld %d has taken a fork\n", get_time() - get_d()->start_time, p->number))
+	{
+		pthread_mutex_unlock(p->left_fork->m_fork);
+		pthread_mutex_unlock(p->right_fork->m_fork);
+		return ;
+	}
+
+	pthread_mutex_lock(&get_d()->m_last_meal);
+	// pthread_mutex_lock(&get_d()->m_print);
+	// printf("last meal: %p\n", (long int *)(p->last_meal_time));
+	// pthread_mutex_unlock(&get_d()->m_print);
+	p->last_meal_time = (long)get_time() - get_d()->start_time;
 	p->meals_eaten++;
-	pthread_mutex_unlock(&d.m_last_meal);
-	pthread_mutex_lock(&d.m_print);
-	printf("%ld %d is eating\n", get_time() - d.start_time, p->number);
-	pthread_mutex_unlock(&d.m_print);
+	pthread_mutex_unlock(&get_d()->m_last_meal);
+
+	if (print_helper("%ld %d is eating\n", get_time() - get_d()->start_time, p->number))
+	{
+		pthread_mutex_unlock(p->left_fork->m_fork);
+		pthread_mutex_unlock(p->right_fork->m_fork);
+		return ;
+	}
 
 	// usleep(d.time_to_eat * 1000);
-	ft_usleep(d.time_to_eat);
+	ft_usleep(get_d()->time_to_eat);
 	pthread_mutex_unlock(p->left_fork->m_fork);
 	pthread_mutex_unlock(p->right_fork->m_fork);
 }

@@ -6,7 +6,7 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 18:15:16 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/07/28 23:08:44 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/29 01:53:56 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,16 @@ void	check_dead_finished(void);
 // error.c
 void	error(char *reason);
 void	error_data(char *reason);
+void	free_all(void);
 
 // init.c
 void	init(int argc, char *argv[]);
 
 // philo_functions.c
 int		dead(void);
-void	think(t_p *p, t_data d);
-void	do_sleep(t_p *p, t_data d);
-void	eat(t_p *p, t_data d);
+void	think(t_p *p);
+void	do_sleep(t_p *p);
+void	eat(t_p *p);
 
 // pthread.c
 t_data	*get_d(void);
