@@ -6,7 +6,7 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 04:18:30 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/07/29 03:06:34 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/29 19:45:32 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ static void	init_forks(void)
 			error("malloc fork failed");
 		get_d()->forks[i]->number = i;
 		get_d()->forks[i]->m_fork = NULL;
-		get_d()->forks[i]->m_fork = malloc(sizeof(pthread_mutex_t));
+		get_d()->forks[i]->m_fork = (pthread_mutex_t *)
+		malloc(sizeof(pthread_mutex_t));
 		if (get_d()->forks[i] == NULL)
 			error("malloc m_fork failed");
 		if (pthread_mutex_init(get_d()->forks[i]->m_fork, NULL) != 0)
