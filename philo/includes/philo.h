@@ -6,7 +6,7 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 18:15:16 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/07/29 01:53:56 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/29 03:19:00 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,29 +44,28 @@ typedef struct s_data {
 	long			start_time;
 	int				death;
 	int				finished;
-	int				ready;
 	pthread_mutex_t	m_dead;
 	pthread_mutex_t	m_finished;
 	pthread_mutex_t	m_last_meal;
 	pthread_mutex_t	m_print;
 }	t_data;
 
-void	ft_usleep(long time);
-
 // check.c
 void	check_arg(int argc, char *argv[]);
 void	check_dead_finished(void);
+int		dead(void);
 
 // error.c
 void	error(char *reason);
-void	error_data(char *reason);
 void	free_all(void);
 
 // init.c
 void	init(int argc, char *argv[]);
 
+// main.c
+void	ft_usleep(long time);
+
 // philo_functions.c
-int		dead(void);
 void	think(t_p *p);
 void	do_sleep(t_p *p);
 void	eat(t_p *p);

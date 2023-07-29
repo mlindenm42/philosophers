@@ -6,7 +6,7 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 20:14:42 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/07/29 02:11:20 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/29 03:09:40 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void	*p_thread(void *arg)
 	t_p	*p;
 
 	p = (t_p *)arg;
+	if (get_d()->nb_of_ps == 1)
+		return (NULL);
 	if (p->number % 2 == 0)
 		ft_usleep(get_d()->time_to_eat / 5);
 	while (!dead())
@@ -52,27 +54,3 @@ void	*p_thread(void *arg)
 	}
 	return (NULL);
 }
-
-// void	*p_thread(void *arg)
-// {
-// 	t_p	*p;
-
-// 	p = (t_p *)arg;
-// 	while (!dead())
-// 	{
-// 		while (get_d()->ready == 1)
-// 		{
-// 			eat(p, *get_d());
-// 			if (get_d()->have_to_eat > 0 && p->meals_eaten >= get_d()->have_to_eat)
-// 			{
-// 				pthread_mutex_lock(&get_d()->m_finished);
-// 				get_d()->finished++;
-// 				pthread_mutex_unlock(&get_d()->m_finished);
-// 				return (NULL);
-// 			}
-// 			do_sleep(p, *get_d());
-// 			think(p, *get_d());
-// 		}
-// 	}
-// 	return (NULL);
-// }

@@ -6,7 +6,7 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 03:38:46 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/07/29 02:34:17 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/29 03:05:37 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ static void	free_ps(void)
 	while (i < get_d()->nb_of_ps)
 	{
 		free(get_d()->ps[i]);
-		// *(get_d()->ps + i) = NULL;
 		i++;
 	}
 	if (get_d()->ps != NULL)
@@ -77,13 +76,5 @@ void	error(char *reason)
 	write(2, "Error\n", 6);
 	write(2, reason, ft_strlen(reason));
 	pthread_mutex_unlock(&get_d()->m_print);
-	exit(EXIT_FAILURE);
-}
-
-void	error_data(char *reason)
-{
-	free_all();
-	write(2, "Error\n", 6);
-	write(2, reason, ft_strlen(reason));
 	exit(EXIT_FAILURE);
 }

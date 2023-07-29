@@ -6,7 +6,7 @@
 /*   By: mlindenm <mlindenm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 04:18:30 by mlindenm          #+#    #+#             */
-/*   Updated: 2023/07/29 00:40:13 by mlindenm         ###   ########.fr       */
+/*   Updated: 2023/07/29 03:06:34 by mlindenm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ static void	init_ps(void)
 			error("Failed to create thread for p %d\n");
 		i++;
 	}
-	// get_d()->ready = 1;
 }
 
 void	init(int argc, char *argv[])
@@ -80,7 +79,6 @@ void	init(int argc, char *argv[])
 		get_d()->have_to_eat = -1;
 	get_d()->death = 0;
 	get_d()->finished = 0;
-	get_d()->ready = 0;
 	if (pthread_mutex_init(&(get_d()->m_dead), NULL) != 0)
 		error("Failed to initialize mutex for eat %d\n");
 	if (pthread_mutex_init(&(get_d()->m_last_meal), NULL) != 0)
